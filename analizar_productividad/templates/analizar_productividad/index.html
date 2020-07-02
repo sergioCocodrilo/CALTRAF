@@ -1,0 +1,140 @@
+<html>
+	<head> 
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet"> 
+		<title>Análisis de productividad</title>
+		<style>
+			body{
+				background-color: #222035;
+				font-family: 'Fira Mono', monospace;
+				color: white;
+			}
+			.title{
+				padding: 2em 0em 2em;
+				text-align: center;
+			}
+			.container{
+				width: 69em;
+				color: #8d8980;
+				display: table;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			.content{
+				display: table-cell;
+				min-width: 23em;
+			}
+			.cm{
+				padding: 2em 0em 2em 0em;
+			}
+
+			.index{
+				padding-left:2em;
+				column-count: 3;
+			}
+
+			.paso{
+				color:#e96d5e;
+			}
+			.bloi{
+				color:#ff9760;
+			}
+			.bloe{
+				color:#6a7e6a;
+			}
+
+			/* || UTILITIES */
+
+			.nobullets {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+
+		</style>
+	<script>
+		function show_data(cm) {
+			for(var i=0; i<87; i++){
+				var x = document.getElementById(i);
+				x.style.display = "none";
+			}
+			var x = document.getElementById(cm);
+			x.style.display = "block";
+		} 
+	</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="title"> ⇥ <b>Filtrar por CM</b> ⇤ </div>
+			<div class="index">
+				{% for cm in cms_short %}
+				<a onclick="show_data({{cm.0}})">{{cm.1}}</a><br>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="container">
+			{% for index, cm in cms %}
+				<div class="cm" id="{{index}}">
+					<b> {{ cm }} </b>
+					<div class="content paso">
+						<div class="title"> ⇥ PORCENTAJE DE PASO ⇤ </div>
+						{% for edificio, paso_records in paso.items %}
+							{% if cm == edificio.0 %}
+								<p>{{ edificio.2 }} ({{ edificio.1 }}) </p>
+								<p>
+								{% for record in paso_records %}
+									{{ record }}<br>
+								{% endfor %}
+								</p>
+							{% endif %}
+						{% endfor %}
+					</div>
+					<div class="content bloi">
+						<div class="title"> ⇥ Bloi ⇤ </div>
+						{% for edificio, bloi_records in bloi.items %}
+							{% if cm == edificio.0 %}
+								<p>{{ edificio.2 }} ({{ edificio.1 }}) </p>
+								<p>
+								{% for record in bloi_records %}
+								{{ record }}<br>
+								{% endfor %}
+								</p>
+							{% endif %}
+						{% endfor %}
+					</div>
+					<div class="content bloe">
+						<div class="title"> ⇥ Bloe ⇤ </div>
+						{% for edificio, bloe_records in bloe.items %}
+							{% if cm == edificio.0 %}
+								<p>{{ edificio.2 }} ({{ edificio.1 }}) </p>
+								<p>
+								{% for record in bloe_records %}
+								{{ record }}<br>
+								{% endfor %}
+								</p>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+			{% endfor %}
+			<div class="title">
+				⇥ <b>Archivos en el servidor</b> ⇤ 
+				{% if caltraf_files %}
+					<ul>
+						{% for file in caltraf_files %}
+							<li class="nobullets">{{ file }}</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p> No se han cargado archivos al servidor.</p>
+				{% endif %}
+
+				{% if msg %}
+					{{ msg }}
+				{% endif %}
+			</div>
+			<div class="title"> ⇥ Notas ⇤ </div>
+			Bloi y Bloe son valores relativos a las llamadas con error. El porcentaje que se muestra es su aporte a las fallas.
+		</div>
+	</body>
+</html>
+

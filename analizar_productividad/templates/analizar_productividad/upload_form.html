@@ -1,0 +1,20 @@
+
+
+
+
+{{ msg }}
+
+
+
+Selecciona los archivos que deseas subir
+
+<form action="{% url "analizar_productividad:upload_file" %}" method="POST" enctype="multipart/form-data">
+	{% csrf_token %}
+	<input type="file" name="file" id="file" required="True">
+	<br>
+	<button>Cargar</button>
+</form>
+
+<div>
+	<p><a href="/">Inicio</a></p>
+</div>

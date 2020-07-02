@@ -1,0 +1,20 @@
+<html>
+	<head>
+	</head>
+	<body>
+		<h1>Análisis del {{ cm }}</h1>
+		<div class="datos">
+			<h2>Datos</h2>
+		</div>
+		<div class="resultados">
+			<h2>Porcentaje de paso</h2>
+			{% for edificio, porcentajes in porcentaje_de_paso.items %}
+				<p>Edificio: {{ edificio }}</p>
+				<p>{{ porcentajes }}</p>
+			{% endfor %}
+		</div>
+		<div class="resultados">
+			<h2>Bloqueo interno</h2>
+		</div>
+	</body>
+</html>

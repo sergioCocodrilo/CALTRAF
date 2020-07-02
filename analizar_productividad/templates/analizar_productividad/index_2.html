@@ -1,0 +1,134 @@
+{% load static %}
+<html>
+	<head> 
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet"> 
+		<title>Análisis de productividad</title>
+		<style>
+			body{
+				background-color: #222035;
+				font-family: 'Fira Mono', monospace;
+				color: white;
+				background-image: url("{% static "analizar_productividad/fondoTelmex.gif" %}");
+			}
+			.title{
+				padding: 1em 0em 1em;
+				text-align: center;
+			}
+			.cm:hover{
+				cursor:pointer;
+			}
+			.container{
+				width: 69em;
+				color: #8d8980;
+				display: table;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			.content{
+				display: table-cell;
+				min-width: 23em;
+			}
+			.cm_containter{
+				padding: 2em 0em 0em 0em;
+				display: table;
+			}
+			.cm_content{
+				display: table-cell;
+				min-width: 23em;
+				color:#e96d5e;
+			}
+
+			.index{
+				padding-left:2em;
+				column-count: 3;
+			}
+			.footer{
+				height: 4em;
+			}
+
+			/* || UTILITIES */
+
+			.nobullets {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			/* || PARAMETERS COLORING */
+			.INC          { color: #e96d5e;}
+			.TNP          { color: #ff9760;}
+			.Bloi         { color: #6a7e6a;}
+			.Bloe         { color: #e96d5e;}
+			.FTS          { color: #ff9760;}
+			.FTE          { color: #6a7e6a;}
+			.OPR 		  { color: #e96d5e;} 
+			.Falla_Tecnica{ color: #ff9760;}
+			.Paso         { color: #6a7e6a;}
+
+		</style>
+	<script>
+		function show_data(cm) {
+			for(var i=0; i<87; i++){
+				var x = document.getElementById(i);
+				x.style.display = "none";
+			}
+			var x = document.getElementById(cm);
+			x.style.display = "block";
+		} 
+	</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="title"> ⇥ <b>Filtrar por CM</b> ⇤ </div>
+			<div class="index">
+				{% for cm in cms_short %}
+				<a class="cm" onclick="show_data({{cm.0}})">{{cm.1}}</a><br>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="container">
+			{% for index, cm in cms %}
+				<div class="cm_container" id="{{index}}">
+					<p><b> {{ cm }} </b></p>
+					{% for edificio, data_dict in b_data.items %}
+						{% if cm == edificio.0 %}
+							{{ edificio.2 }} ({{ edificio.1 }})
+							{% for parametro, valores in data_dict.items %}
+								<div class="cm_content {{parametro}}">
+									<center> ⇥ {{ parametro }} ⇤ </center>
+									<p>
+									{% for record in valores %}
+										{{ record }}<br>
+									{% endfor %}
+									</p>
+								</div>
+							{% endfor %}
+						{% endif %}
+					{% endfor %}
+				</div>
+			{% endfor %}
+		</div>
+		<div class="container">
+			<div class="title"> ⇥ Archivos en el servidor ⇤ </div>
+			{% if caltraf_files %}
+				<ul>
+					{% for file in caltraf_files %}
+						<li class="nobullets">{{ file }}</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<p> No se han cargado archivos al servidor.</p>
+			{% endif %}
+		</div>
+		<div class="container">
+			<div class="title"> ⇥ Notas ⇤ </div>
+			<center>
+				<p>Excepto Paso, todas las columnas muestran porcentajes respecto al total de fallas.</p>
+				<p>El total de fallas se calcula sumando las columnas:</p>
+				<p>"D.- INC", "E.- TNP", "Bloi", "Bloe", "FTS", "FTE", "OPR", "Falla Tecnica"</p>
+			</center>
+		</div>
+		<div class="footer"></div>
+	</body>
+</html>
+
